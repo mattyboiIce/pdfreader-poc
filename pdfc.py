@@ -57,11 +57,11 @@ def extract_data_from_pdf(pdf_file):
                         dual_customer_info = line.split(":")
                         if indv_field_number == SECONDARY_EMPLOYER_INDEX:
                             c1_data['Secondary Employer'] = dual_customer_info[1].strip() if len(dual_customer_info) > 1 and len(dual_customer_info[1].strip()) > 1 else 'N/A'
-                            c2_data['Secondary Employer'] = dual_customer_info[2].strip() if len(dual_customer_info) > 1 and len(dual_customer_info[2].strip()) > 1 else 'N/A'
+                            c2_data['Secondary Employer'] = dual_customer_info[2].strip() if len(dual_customer_info) > 2 and len(dual_customer_info[2].strip()) > 1 else 'N/A'
                             indv_field_number += 1
                             continue
                         c1_data[customer_data_fields[indv_field_number]] = dual_customer_info[1].strip() if len(dual_customer_info) > 1 and len(dual_customer_info[1]) > 1 else 'N/A'
-                        c2_data[customer_data_fields[indv_field_number]] = dual_customer_info[2].strip() if len(dual_customer_info) > 1 and len(dual_customer_info[2]) > 1 else 'N/A'
+                        c2_data[customer_data_fields[indv_field_number]] = dual_customer_info[2].strip() if len(dual_customer_info) > 2 and len(dual_customer_info[2]) > 1 else 'N/A'
                         indv_field_number += 1
                 #here's where things get janky...
                 # get the physical and mailing addresses
