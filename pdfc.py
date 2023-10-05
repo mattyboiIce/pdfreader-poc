@@ -101,7 +101,7 @@ def extract_data_from_pdf(pdf_file):
                     primary_email = line.split('E-mail:')[1].strip()
                     c1_data['Primary Email'] = c2_data['Primary Email'] = primary_email if len(primary_email) > 2 else 'N/A'
                 elif line_number == IMPORTANT_LINE_NUMBERS['secondary_email']:
-                    secondary_email = line.split('E-mail:')[1].strip()
+                    secondary_email = line.split('E-mail:')[1].strip() if len(line.split('E-mail:')) > 1 else 'N/A'
                     c1_data['Secondary Email'] = c2_data['Secondary Email'] = secondary_email if len(secondary_email) > 2 else 'N/A'
                 #end get phone numbers
                 elif line_number == IMPORTANT_LINE_NUMBERS['finances']:
@@ -129,16 +129,19 @@ def extract_data_from_pdf(pdf_file):
                     tcp_address = info[2].strip() 
                 elif line_number == IMPORTANT_LINE_NUMBERS['tcp_addy2']:
                     tcp_address += ' ' + line.strip()
-                    c1_data['TCP Address'] = c2_data['TCP Address'] = tcp_address if len(tcp_address) > 2 else 'N/A'
+                    c1_data['TCP Address'] = c2_data['TCP Address'] = tcp_address if len(tcp_address) > 2  else 'N/A'
 
                 # elif line_number > 35:
                 #     print(line_number)
                 #     print(line)
 
-                # print(c1_data)
-                # print(c2_data)
 
-
+    # print(c1_data)
+    # print(c2_data)
+    if len(c1_data) < len(customer_data_fields)  :
+        throw_error = f'Error converting {pdf_file}. Only {len(c1_data)} fields were found.'
+        print(throw_error)
+        return False
     return [c1_data, c2_data]
 
 
@@ -152,9 +155,14 @@ def convert_all_pdfs():
     csv_file_path = os.path.join(converted_pdfs_folder, csv_file)
     for filename in os.listdir(pdf_folder):
         if filename.endswith(".pdf"):
-            pdf_file_path = os.path.join(pdf_folder, filename)
-            customer_data_list = extract_data_from_pdf(pdf_file_path)
-            all_customer_data.extend(customer_data_list)
+            try:
+                pdf_file_path = os.path.join(pdf_folder, filename)
+                customer_data_list = extract_data_from_pdf(pdf_file_path)
+                if customer_data_list:
+                    all_customer_data.extend(customer_data_list)
+            except Exception as e:
+                continue
+
     with open(csv_file_path, 'w', newline='') as csvfile:
         fieldnames = all_customer_data[0].keys()
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
