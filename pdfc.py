@@ -63,14 +63,21 @@ def extract_data_from_pdf(pdf_file):
                         c1_data[customer_data_fields[indv_field_number]] = dual_customer_info[1].strip() if len(dual_customer_info) > 1 and len(dual_customer_info[1]) > 1 else 'N/A'
                         c2_data[customer_data_fields[indv_field_number]] = dual_customer_info[2].strip() if len(dual_customer_info) > 2 and len(dual_customer_info[2]) > 1 else 'N/A'
                         indv_field_number += 1
-                #here's where things get janky...
+                #here's where things get janky... lol fr daddy ;)
                 # get the physical and mailing addresses
                 elif line_number == IMPORTANT_LINE_NUMBERS['phys_and_mail_addy_1']:
                     keywords = ['Physical', 'Mailing'] 
                     pattern = '|'.join(keywords)
                     addresses = re.split(pattern, line)
-                    physical_address += addresses[1].strip()
-                    mailing_address += addresses[2] if len(addresses[2]) > 0 else  addresses[1].strip()
+                    if len(addresses)>2:
+                        physical_address += addresses[1].strip()
+                        mailing_address += addresses[2] if len(addresses[2]) > 0 else  addresses[1].strip()
+                    elif len(addresses) > 1:
+                        physical_address += addresses[1].strip()
+                        mailing_address += addresses[1].strip()
+                    else:
+                        print(f'Unexpected format found in line: {line}')
+                ##        
                 elif line_number == IMPORTANT_LINE_NUMBERS['phys_and_mail_addy_2']:
                     addresses = line.split('Address:')
                     physical_address += ' ' + addresses[1].strip() 
