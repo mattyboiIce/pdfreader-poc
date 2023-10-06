@@ -75,8 +75,6 @@ def extract_data_from_pdf(pdf_file):
                     elif len(addresses) > 1:
                         physical_address += addresses[1].strip()
                         mailing_address += addresses[1].strip()
-                    else:
-                        print(f'Unexpected format found in line: {line}')
                 ##        
                 elif line_number == IMPORTANT_LINE_NUMBERS['phys_and_mail_addy_2']:
                     addresses = line.split('Address:')
@@ -146,8 +144,6 @@ def extract_data_from_pdf(pdf_file):
     # print(c1_data)
     # print(c2_data)
     if len(c1_data) < len(customer_data_fields)  :
-        throw_error = f'Error converting {pdf_file}. Only {len(c1_data)} fields were found.'
-        print(throw_error)
         return False
     return [c1_data, c2_data]
 
