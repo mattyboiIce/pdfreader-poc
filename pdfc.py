@@ -164,6 +164,7 @@ def convert_all_pdfs():
                 if customer_data_list:
                     all_customer_data.extend(customer_data_list)
             except Exception as e:
+                print(e)
                 continue
 
     with open(csv_file_path, 'w', newline='') as csvfile:
